@@ -43,7 +43,6 @@ Conversion notes:
 
 **Installation**
 
-First, navigate the root of this repository to find the appropriate [phenotype generation](https://github.com/National-COVID-Cohort-Collaborative/Phenotype_Data_Acquisition/tree/master/PhenotypeScripts) and [data extraction](https://github.com/National-COVID-Cohort-Collaborative/Phenotype_Data_Acquisition/tree/master/ExtractScripts) scripts that match your common data model and sql dialect. Save these to a convenient location as the file paths are expected as parameters below. 
 
 To utilize the Exporter, in `R` use the following code to install the dependencies:
 ```r
@@ -68,8 +67,6 @@ library(CriticalRExporter)
 **Troubleshooting note:** If you have an older version of R (prior to version 4), the installation may fail--the remotes package is not tolerant of warning messages, which often come up due to versioning issues. The best way to correct this is to update to the newest version of R. If you are not able to update R, you can force the installation to ignore the warning messages by setting an additional environment variable: R_REMOTES_NO_ERRORS_FROM_WARNINGS = true. 
 
 **Local configuration**
-
-Note: Please scroll to the bottom of this README to see examples of what the MANIFEST configuration should look like.
 
 ```r
 # -- run config
