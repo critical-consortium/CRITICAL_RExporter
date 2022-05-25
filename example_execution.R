@@ -9,8 +9,9 @@ library(remotes)
 
 
 remotes::install_github(repo = "critical-consortium/CRITICAL_RExporter"
-               ,ref = "master"
-               ,INSTALL_opts = "--no-multiarch"
+                        ,ref = "main"
+                        ,INSTALL_opts = "--no-multiarch"
+                        ,auth_token = Sys.getenv("GITHUB_PAT")
 )
 
 # Uncomment to test for missing packages

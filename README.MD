@@ -24,7 +24,14 @@ Conversion notes:
 
 - You have created a table named 'CRITICAL_COHORT' containing the column 'PERSON_ID' which lists the unique PERSON_ID values of patients included in your CRITICAL cohort. The schema of where this table lives is specified within the 'cohortDatabaseSchema' variable below.
 
-
+An example might look like
+``` sql
+SELECT DISTINCT PERSON_ID
+INTO @cohortDatabaseSchema.dbo.CRITICAL_COHORT
+FROM VISIT_DETAIL
+WHERE VISIT_DETAIL_CONCEPT_ID = 581379 -- ICU 
+AND YEAR(VISIT_DETAIL_END_DATE) < '2022';
+```
 
 **System Prerequisites**
 
@@ -54,8 +61,9 @@ library(remotes)
 
 
 remotes::install_github(repo = "critical-consortium/CRITICAL_RExporter"
-               ,ref = "master"
-               ,INSTALL_opts = "--no-multiarch"
+                ,ref = "main"
+                ,INSTALL_opts = "--no-multiarch"
+                ,auth_token = Sys.getenv("GITHUB_PAT")
 )
 
 # Uncomment to test for missing packages

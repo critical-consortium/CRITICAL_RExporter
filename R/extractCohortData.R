@@ -28,7 +28,7 @@ parse_sql <- function(sqlFile) {
 runExtraction  <- function(connectionDetails,
                            sqlFilePath,
                            cdmDatabaseSchema,
-                           resultsDatabaseSchema,
+                           cohortDatabaseSchema,
                            outputFolder = paste0(getwd(), "/output/"),
                            useAndromeda = FALSE,
                            ...
@@ -54,7 +54,7 @@ runExtraction  <- function(connectionDetails,
   src_sql <- SqlRender::render(sql = src_sql,
                                warnOnMissingParameters = FALSE,
                                cdmDatabaseSchema = cdmDatabaseSchema,
-                               resultsDatabaseSchema = resultsDatabaseSchema,
+                               cohortDatabaseSchema = cohortDatabaseSchema,
                                ...)
 
 
