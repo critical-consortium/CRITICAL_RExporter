@@ -65,7 +65,17 @@ SELECT
    PRECEDING_VISIT_OCCURRENCE_ID
 FROM @cdmDatabaseSchema.VISIT_OCCURRENCE v
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON v.PERSON_ID = n.PERSON_ID;
+  ON v.PERSON_ID = n.PERSON_ID
+  WHERE ( -- using discharge date, per 05/19/22 decision
+    (
+      -- Workaround here as historically end date has often been missing
+      VISIT_END_DATE IS NULL
+      AND
+      YEAR(VISIT_START_DATE) < '2022'
+    )
+    OR
+      YEAR(VISIT_END_DATE) < '2022'
+    );
 
 --CONDITION_OCCURRENCE
 --OUTPUT_FILE: CONDITION_OCCURRENCE.csv
@@ -87,7 +97,8 @@ SELECT
    NULL as CONDITION_STATUS_SOURCE_VALUE
 FROM @cdmDatabaseSchema.CONDITION_OCCURRENCE co
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON CO.person_id = n.person_id;
+  ON CO.person_id = n.person_id
+  AND YEAR(CONDITION_START_DATE) < '2022';
 
 --DRUG_EXPOSURE
 --OUTPUT_FILE: DRUG_EXPOSURE.csv
@@ -116,7 +127,8 @@ SELECT
    DOSE_UNIT_SOURCE_VALUE
 FROM @cdmDatabaseSchema.DRUG_EXPOSURE de
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON de.PERSON_ID = n.PERSON_ID;
+  ON de.PERSON_ID = n.PERSON_ID
+  AND YEAR(DRUG_EXPOSURE_START_DATE) < '2022';
 
 --DEVICE_EXPOSURE
 --OUTPUT_FILE: DEVICE_EXPOSURE.csv
@@ -138,7 +150,8 @@ SELECT
    DEVICE_SOURCE_CONCEPT_ID
 FROM @cdmDatabaseSchema.DEVICE_EXPOSURE de
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON de.PERSON_ID = n.PERSON_ID;
+  ON de.PERSON_ID = n.PERSON_ID
+  AND YEAR(DEVICE_EXPOSURE_START_DATE) < '2022';
 
 --PROCEDURE_OCCURRENCE
 --OUTPUT_FILE: PROCEDURE_OCCURRENCE.csv
@@ -159,7 +172,8 @@ SELECT
    NULL as MODIFIER_SOURCE_VALUE
 FROM @cdmDatabaseSchema.PROCEDURE_OCCURRENCE po
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON PO.PERSON_ID = N.PERSON_ID;
+  ON PO.PERSON_ID = N.PERSON_ID
+  AND YEAR(PROCEDURE_START_DATE) < '2022';
 
 --MEASUREMENT
 --OUTPUT_FILE: MEASUREMENT.csv
@@ -186,7 +200,8 @@ SELECT
    NULL as VALUE_SOURCE_VALUE
 FROM @cdmDatabaseSchema.MEASUREMENT m
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON M.PERSON_ID = N.PERSON_ID;
+  ON M.PERSON_ID = N.PERSON_ID
+  AND YEAR(MEASUREMENT_DATE) < '2022';
 
 --OBSERVATION
 --OUTPUT_FILE: OBSERVATION.csv
@@ -211,7 +226,8 @@ SELECT
    NULL as QUALIFIER_SOURCE_VALUE
 FROM @cdmDatabaseSchema.OBSERVATION o
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON O.PERSON_ID = N.PERSON_ID;
+  ON O.PERSON_ID = N.PERSON_ID
+  AND YEAR(OBSERVATION_DATE) < '2022';
 
 --DEATH
 --OUTPUT_FILE: DEATH.csv
@@ -225,7 +241,8 @@ SELECT
 	CAUSE_SOURCE_CONCEPT_ID
 FROM @cdmDatabaseSchema.DEATH d
 JOIN @cohortDatabaseSchema.critical_cohort n
-ON D.PERSON_ID = N.PERSON_ID;
+ON D.PERSON_ID = N.PERSON_ID
+AND YEAR(DEATH_DATE) < '2022';
 
 --LOCATION
 --OUTPUT_FILE: LOCATION.csv
@@ -324,7 +341,8 @@ SELECT
    GAP_DAYS
 FROM @cdmDatabaseSchema.DRUG_ERA dre
 JOIN @cohortDatabaseSchema.critical_cohort n
-  ON DRE.PERSON_ID = N.PERSON_ID;
+  ON DRE.PERSON_ID = N.PERSON_ID
+  AND YEAR(DRUG_ERA_START_DATE) < '2022';
 
 --CONDITION_ERA
 --OUTPUT_FILE: CONDITION_ERA.csv
@@ -337,7 +355,8 @@ SELECT
    CONDITION_OCCURRENCE_COUNT
 FROM @cdmDatabaseSchema.CONDITION_ERA ce 
 JOIN @cohortDatabaseSchema.critical_cohort n 
-ON CE.PERSON_ID = N.PERSON_ID;
+ON CE.PERSON_ID = N.PERSON_ID
+AND YEAR(CONDITION_ERA_START_DATE) < '2022';
 
 --VISIT_DETAIL
 --OUTPUT_FILE: VISIT_DETAIL.csv
@@ -362,5 +381,6 @@ SELECT visit_detail_id
       ,visit_occurrence_id
   FROM @cdmDatabaseSchema.VISIT_DETAIL v
   JOIN @cohortDatabaseSchema.critical_cohort n
-  ON v.PERSON_ID = n.PERSON_ID;
+  ON v.PERSON_ID = n.PERSON_ID
+  AND YEAR(visit_detail_end_date) < '2022'; -- using end date, per 05/19/22 decision
 
